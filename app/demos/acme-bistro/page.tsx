@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 import DemoChrome from "@/components/DemoChrome";
+import SmoothScroll from "@/components/SmoothScroll";
 import styles from "./page.module.css";
 
 export const metadata: Metadata = {
   title: "ACME Bistro — demo build | incredible.website",
   description:
-    "A demo restaurant site built by incredible.website. ACME Bistro is fictional and all copy is placeholder.",
+    "A demo restaurant site built by incredible.website. ACME Bistro is a fictional restaurant.",
   robots: { index: false, follow: true },
 };
 
@@ -13,24 +14,24 @@ const menu = [
   {
     course: "To start",
     dishes: [
-      { name: "Lorem ipsum velouté", desc: "Celeriac, brown butter, hazelnut", price: "12" },
-      { name: "Dolor sit amet tartare", desc: "Beef, cured yolk, sourdough", price: "16" },
-      { name: "Consectetur burrata", desc: "Heritage tomato, basil oil", price: "14" },
+      { name: "Celeriac velouté", desc: "Brown butter, toasted hazelnut, chervil", price: "12" },
+      { name: "Beef tartare", desc: "Cured egg yolk, sourdough, capers", price: "16" },
+      { name: "Burrata", desc: "Heritage tomato, basil oil, sea salt", price: "14" },
     ],
   },
   {
     course: "Mains",
     dishes: [
-      { name: "Adipiscing elit duck", desc: "Cherry, turnip, sauce bigarade", price: "29" },
-      { name: "Tempor incididunt cod", desc: "Fennel, mussel broth, dill", price: "26" },
-      { name: "Labore et dolore risotto", desc: "Wild mushroom, aged parmesan", price: "22" },
+      { name: "Roast duck breast", desc: "Cherry, turnip, sauce bigarade", price: "29" },
+      { name: "Line-caught cod", desc: "Fennel, mussel broth, dill", price: "26" },
+      { name: "Wild mushroom risotto", desc: "Aged parmesan, thyme, brown butter", price: "22" },
     ],
   },
   {
     course: "To finish",
     dishes: [
-      { name: "Magna aliqua tart", desc: "Dark chocolate, sea salt, crème fraîche", price: "11" },
-      { name: "Veniam quis sorbet", desc: "Blood orange, campari", price: "9" },
+      { name: "Dark chocolate tart", desc: "Sea salt, crème fraîche", price: "11" },
+      { name: "Blood orange sorbet", desc: "Campari, candied peel", price: "9" },
     ],
   },
 ];
@@ -71,8 +72,8 @@ export default function AcmeBistro() {
               <em>long evenings</em>
             </h1>
             <p className={styles.heroSub}>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
-              incididunt ut labore et dolore magna aliqua.
+              A short menu that changes with the market, a long wine list, and no hurry to turn the
+              table. Two minutes from Sendlinger Tor.
             </p>
             <div className={styles.heroActions}>
               <a className={styles.btn} href="#visit">
@@ -146,6 +147,7 @@ export default function AcmeBistro() {
         <p>© 2026 ACME Bistro — a fictional restaurant.</p>
         <p>Demo build by incredible.website</p>
       </footer>
+      <SmoothScroll offset={60} />
     </div>
   );
 }

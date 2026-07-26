@@ -38,11 +38,12 @@ with no Node server at runtime.
 
 ## Architecture
 
-**Content is separated from presentation.** Every headline, price, service, FAQ,
-and case study lives in `lib/content.ts` as typed data. The section components
-map over it. Editing the site is mostly editing that one file.
+**Content is separated from presentation.** Every headline, service, FAQ, and
+demo entry lives in `lib/content.ts` as typed data. The section components map
+over it. Editing the studio site is mostly editing that one file. (Each demo
+keeps its own copy inline, since the three have entirely different shapes.)
 
-**Almost everything is a server component.** Only four pieces ship JavaScript:
+**Almost everything is a server component.** Only five pieces ship JavaScript:
 
 | Component | Why it's a client component |
 | --- | --- |
@@ -50,13 +51,14 @@ map over it. Editing the site is mostly editing that one file.
 | `ContactForm` | form state and validation |
 | `Reveal` | the IntersectionObserver that fades sections in |
 | `HeroParallax` | drifts the hero as you scroll |
+| `SmoothScroll` | eased in-page scrolling (also used by the demos) |
 
 `Reveal` and `HeroParallax` deliberately target elements from outside rather
 than wrapping them. That keeps the dune SVG and every section server-rendered —
 the observer is the only thing in the bundle, and no wrapper elements disturb
 the grid layouts.
 
-The whole export — studio site plus all three demos — is ~232 KB gzipped
+The whole export — studio site plus all three demos — is ~233 KB gzipped
 including every JS, CSS, and HTML file.
 
 ## Design
@@ -70,7 +72,7 @@ grain overlay. Nothing to download, no licensing, and it stays sharp at any
 viewport.
 
 Styles are one global stylesheet rather than CSS Modules. The class names are
-already BEM-namespaced (`.work__meta`, `.tier--featured`), so modules would add
+already BEM-namespaced (`.work__meta`, `.cta-band__title`), so modules would add
 indirection without preventing any collisions, and the token block at the top of
 `globals.css` is easier to reason about in one place:
 
@@ -87,11 +89,32 @@ Type uses system font stacks, so there are no webfont requests and no flash of
 unstyled text. To switch to a licensed display face, use `next/font` and point
 `--font-serif` / `--font-mono` at the generated CSS variables.
 
+### Motion
+
+Two deliberate pieces of motion, both disabled under `prefers-reduced-motion`:
+
+- **The nav pill travels.** Rather than each link painting its own background on
+  hover, a single `.nav__bubble` slides and resizes between them. `Nav.tsx`
+  measures the target link's `offsetLeft` and `offsetWidth` and writes them to
+  inline styles; the CSS transition does the rest. It follows the pointer while
+  hovering and returns to whichever section the scrollspy says you're reading.
+  Measuring the real element — rather than hard-coding positions — keeps it
+  correct when labels change or fonts render differently.
+- **In-page scrolling ramps.** `SmoothScroll.tsx` intercepts anchor clicks and
+  animates the scroll on an ease-in-out cubic curve, so it accelerates away and
+  settles rather than moving at the constant rate CSS `scroll-behavior: smooth`
+  gives you. Duration scales with the square root of the distance, clamped to
+  520–1250ms, so a jump to the footer doesn't crawl and a short hop doesn't drag.
+  Each `window.scrollTo` passes `behavior: "instant"` so the CSS fallback can't
+  fight the animation frame by frame.
+
 ## Demo builds
 
 The studio site has no invented clients, case studies, testimonials, or
 performance metrics. Instead, `/demos` holds three finished pages a visitor can
-actually click into — built for a fictional "ACME" company with lorem ipsum copy:
+actually click into — built for a fictional "ACME" company. The businesses are
+invented, but the copy is written as real product, shop, and restaurant writing;
+there is no lorem ipsum anywhere:
 
 | Route | Register |
 | --- | --- |
@@ -104,10 +127,11 @@ stylesheet, so the three look genuinely unlike each other and unlike the studio
 site. That is the point: they demonstrate range, not a single template recoloured.
 
 `DemoChrome` pins a bar to the top of every demo stating that the company is
-fictional and the copy is placeholder, with a link back to the studio site. The
-demo pages are also `noindex` (see each page's `metadata.robots`) and are kept
-out of `sitemap.ts`, so lorem ipsum pages never compete with the real site in
-search results.
+fictional, with a link back to the studio site. Because that bar owns the
+`top: 0` sticky slot, demo page headers are deliberately static — a second
+sticky element at the same offset slides underneath it. The demo pages are also
+`noindex` (see each page's `metadata.robots`) and are kept out of `sitemap.ts`,
+so invented brands never compete with the real site in search results.
 
 To add a demo: create `app/demos/<slug>/page.tsx` and `page.module.css`, then add
 an entry to `demos` in `lib/content.ts`. The work section picks it up

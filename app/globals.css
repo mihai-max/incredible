@@ -285,6 +285,7 @@ a {
 .nav__wordmark span { color: var(--ember); }
 
 .nav__links {
+  position: relative;
   margin-left: auto;
   display: flex;
   align-items: center;
@@ -296,15 +297,39 @@ a {
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
 }
+
+/*
+  One pill slides between the links instead of each link painting its own
+  background. Position and width are measured in Nav.tsx and written to inline
+  styles; the transition here is what makes it travel rather than jump.
+*/
+.nav__bubble {
+  position: absolute;
+  top: 0.4rem;
+  left: 0;
+  height: calc(100% - 0.8rem);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+    width 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.3s var(--ease);
+}
+/* Only fades in once measured, so it never flashes at x=0 on first paint. */
+.nav__bubble[data-ready] { opacity: 1; }
+
 .nav__links a {
+  position: relative;
   padding: 0.5rem 1.05rem;
   border-radius: 999px;
   font-size: 0.92rem;
   color: var(--ink-soft);
-  transition: background 0.25s var(--ease), color 0.25s var(--ease);
+  transition: color 0.3s var(--ease);
 }
-.nav__links a:hover { color: var(--ink); background: rgba(255, 255, 255, 0.06); }
-.nav__links a.is-active { color: var(--ink); background: rgba(255, 255, 255, 0.1); }
+.nav__links a:hover,
+.nav__links a.is-active { color: var(--ink); }
 
 .nav__cta {
   padding: 0.72rem 1.35rem;

@@ -15,7 +15,7 @@ export default function Work() {
           </h2>
           <p className="section__lede" data-reveal="" data-reveal-delay={2}>
             Three finished pages for a fictional company, each built in a different register. The
-            copy is placeholder — the design and the code are not.
+            businesses are invented — the design and the code are not.
           </p>
         </header>
 

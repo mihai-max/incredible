@@ -1,21 +1,22 @@
 import type { Metadata } from "next";
 import DemoChrome from "@/components/DemoChrome";
+import SmoothScroll from "@/components/SmoothScroll";
 import styles from "./page.module.css";
 
 export const metadata: Metadata = {
   title: "ACME Supply Co. — demo build | incredible.website",
   description:
-    "A demo e-commerce storefront built by incredible.website. ACME Supply Co. is fictional and all copy is placeholder.",
+    "A demo e-commerce storefront built by incredible.website. ACME Supply Co. is a fictional company.",
   robots: { index: false, follow: true },
 };
 
 const products = [
-  { name: "Lorem Canvas Tote", price: "€48", tone: "one" },
-  { name: "Ipsum Enamel Mug", price: "€22", tone: "two" },
-  { name: "Dolor Wool Throw", price: "€135", tone: "three" },
-  { name: "Sit Amet Notebook", price: "€18", tone: "four" },
-  { name: "Consectetur Apron", price: "€64", tone: "five" },
-  { name: "Adipiscing Carafe", price: "€89", tone: "six" },
+  { name: "Canvas Work Tote", price: "€48", tone: "one" },
+  { name: "Enamel Camp Mug", price: "€22", tone: "two" },
+  { name: "Merino Wool Throw", price: "€135", tone: "three" },
+  { name: "Linen-Bound Notebook", price: "€18", tone: "four" },
+  { name: "Waxed Cotton Apron", price: "€64", tone: "five" },
+  { name: "Hand-Blown Carafe", price: "€89", tone: "six" },
 ];
 
 export default function AcmeSupply() {
@@ -46,8 +47,8 @@ export default function AcmeSupply() {
               Goods made to <em>outlast</em> the season
             </h1>
             <p className={styles.heroSub}>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
-              incididunt ut labore et dolore magna aliqua.
+              Everyday objects built from materials that age well — canvas, enamel, wool, and
+              glass, made in small runs by workshops we visit ourselves.
             </p>
             <a className={styles.btn} href="#shop">
               Shop the collection
@@ -78,7 +79,7 @@ export default function AcmeSupply() {
         <section className={styles.shop} id="shop">
           <div className={styles.shopHead}>
             <h2>The collection</h2>
-            <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco.</p>
+            <p>Six pieces for the table, the studio, and the walk in between.</p>
           </div>
 
           <div className={styles.grid}>
@@ -104,14 +105,14 @@ export default function AcmeSupply() {
           <div className={styles.storyArt} aria-hidden="true" />
           <div className={styles.storyCopy}>
             <p className={styles.kicker}>Our story</p>
-            <h2>Slow goods, dolor sit amet</h2>
+            <h2>Slow goods, made close to home</h2>
             <p>
-              Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat
-              nulla pariatur. Excepteur sint occaecat cupidatat non proident.
+              We started in 2016 with one tote and a workshop two streets away. The rule has not
+              changed since: if we cannot visit the people making it, we do not sell it.
             </p>
             <p>
-              Sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis
-              unde omnis iste natus error sit voluptatem.
+              Everything is produced in runs of a few hundred, which means things sell out and
+              come back rather than sitting in a warehouse. Repairs are free for the first two years.
             </p>
             <a className={styles.btnGhost} href="#shop">
               Read more
@@ -121,7 +122,7 @@ export default function AcmeSupply() {
 
         <section className={styles.signup}>
           <h2>Join the list</h2>
-          <p>Nemo enim ipsam voluptatem quia voluptas sit aspernatur — one letter a month.</p>
+          <p>One letter a month: new pieces, restocks, and the occasional workshop visit.</p>
           <form className={styles.form} action="#shop">
             <label className={styles.srOnly} htmlFor="supply-email">
               Email address
@@ -136,6 +137,7 @@ export default function AcmeSupply() {
         <p>© 2026 ACME Supply Co. — a fictional company.</p>
         <p>Demo build by incredible.website</p>
       </footer>
+      <SmoothScroll offset={60} />
     </div>
   );
 }

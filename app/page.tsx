@@ -10,6 +10,7 @@ import Faq from "@/components/Faq";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
 import ScrollReveal from "@/components/Reveal";
+import SmoothScroll from "@/components/SmoothScroll";
 
 export default function Home() {
   return (
@@ -31,6 +32,7 @@ export default function Home() {
 
       <Footer />
       <ScrollReveal />
+      <SmoothScroll />
     </>
   );
 }

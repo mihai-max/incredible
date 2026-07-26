@@ -1,38 +1,39 @@
 import type { Metadata } from "next";
 import DemoChrome from "@/components/DemoChrome";
+import SmoothScroll from "@/components/SmoothScroll";
 import styles from "./page.module.css";
 
 export const metadata: Metadata = {
   title: "ACME Cloud — demo build | incredible.website",
   description:
-    "A demo SaaS product site built by incredible.website. ACME Cloud is fictional and all copy is placeholder.",
+    "A demo SaaS product site built by incredible.website. ACME Cloud is a fictional company.",
   robots: { index: false, follow: true },
 };
 
 const features = [
   {
-    title: "Lorem pipelines",
-    body: "Consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+    title: "Build pipelines",
+    body: "Every push builds in a clean container and caches what it can, then shows you exactly which step cost the most time.",
   },
   {
-    title: "Ipsum autoscaling",
-    body: "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea.",
+    title: "Autoscaling",
+    body: "Traffic doubles at nine and halves by midnight. Capacity follows it, and you pay for what actually ran.",
   },
   {
-    title: "Dolor observability",
-    body: "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat.",
+    title: "Observability",
+    body: "Traces, logs, and metrics land on one timeline, so you stop stitching three tabs together to answer one question.",
   },
   {
-    title: "Sit amet routing",
-    body: "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit.",
+    title: "Traffic routing",
+    body: "Split by region, header, or percentage. Move a release into production gradually and roll it back in one click.",
   },
   {
-    title: "Elit edge cache",
-    body: "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque.",
+    title: "Edge cache",
+    body: "Cacheable responses are served from whichever of our 180 locations is closest, and purged the moment you deploy.",
   },
   {
-    title: "Tempor audit logs",
-    body: "Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit consequuntur.",
+    title: "Audit logs",
+    body: "Every configuration change is recorded with who made it, when, and what it replaced. Exportable for review.",
   },
 ];
 
@@ -41,14 +42,14 @@ const plans = [
     name: "Starter",
     price: "€0",
     unit: "forever",
-    blurb: "Lorem ipsum dolor sit amet, for small teams getting started.",
+    blurb: "For prototypes and side projects that need somewhere real to live.",
     items: ["3 projects", "1 GB storage", "Community support"],
   },
   {
     name: "Team",
     price: "€49",
     unit: "per month",
-    blurb: "Consectetur adipiscing elit, for teams shipping every week.",
+    blurb: "For teams shipping to production every week.",
     items: ["Unlimited projects", "100 GB storage", "Priority support", "SSO"],
     featured: true,
   },
@@ -56,7 +57,7 @@ const plans = [
     name: "Enterprise",
     price: "Custom",
     unit: "talk to sales",
-    blurb: "Sed do eiusmod tempor, for organisations with compliance needs.",
+    blurb: "For organisations with procurement, compliance, and uptime commitments.",
     items: ["Dedicated cluster", "Custom SLA", "Audit logging", "Onboarding"],
   },
 ];
@@ -83,13 +84,13 @@ export default function AcmeCloud() {
 
       <main id="main">
         <section className={styles.hero}>
-          <p className={styles.kicker}>Lorem ipsum platform</p>
+          <p className={styles.kicker}>Developer infrastructure</p>
           <h1 className={styles.heroTitle}>
             Ship your infrastructure <em>without the yak shaving</em>
           </h1>
           <p className={styles.heroSub}>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
-            incididunt ut labore et dolore magna aliqua veniam quis nostrud.
+            Build pipelines, autoscaling, and observability behind one control plane. Connect a
+            repository and your first environment is live in under three minutes.
           </p>
           <div className={styles.heroActions}>
             <a className={styles.btnPrimary} href="#plans">
@@ -127,10 +128,10 @@ export default function AcmeCloud() {
         <section className={styles.features} id="features">
           <div className={styles.sectionHead}>
             <p className={styles.kicker}>Features</p>
-            <h2>Everything, dolor sit amet</h2>
+            <h2>Everything you need to run in production</h2>
             <p className={styles.lede}>
-              Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex
-              ea commodo consequat.
+              One platform for building, deploying, scaling, and watching your services — instead of
+              six tools glued together with scripts nobody wants to own.
             </p>
           </div>
 
@@ -148,7 +149,7 @@ export default function AcmeCloud() {
         <section className={styles.plans} id="plans">
           <div className={styles.sectionHead}>
             <p className={styles.kicker}>Pricing</p>
-            <h2>Simple, lorem ipsum pricing</h2>
+            <h2>Straightforward pricing</h2>
           </div>
 
           <div className={styles.planGrid}>
@@ -180,10 +181,10 @@ export default function AcmeCloud() {
         </section>
 
         <section className={styles.closer} id="faq">
-          <h2>Ready to get started?</h2>
+          <h2>Ready to deploy?</h2>
           <p>
-            Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse quam nihil
-            molestiae consequatur.
+            Create an account and connect a repository. The free tier doesn&apos;t expire, and it
+            doesn&apos;t ask for a card.
           </p>
           <a className={styles.btnPrimary} href="#plans">
             Create an account
@@ -195,6 +196,7 @@ export default function AcmeCloud() {
         <p>© 2026 ACME Cloud — a fictional company.</p>
         <p>Demo build by incredible.website</p>
       </footer>
+      <SmoothScroll offset={60} />
     </div>
   );
 }

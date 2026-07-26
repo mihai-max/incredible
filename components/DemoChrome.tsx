@@ -4,8 +4,8 @@ import styles from "./DemoChrome.module.css";
 /**
  * Bar pinned to the top of every demo page.
  *
- * Demos use invented brands and placeholder copy, so this states that plainly
- * and gives a way back to the studio site. It sits above each demo's own header.
+ * The brands are invented, so this states that plainly and gives a way back to
+ * the studio site. It sits above each demo's own header.
  */
 export default function DemoChrome({ name }: { name: string }) {
   return (
@@ -14,7 +14,7 @@ export default function DemoChrome({ name }: { name: string }) {
         <span className={styles.dot} aria-hidden="true" />
         <strong>Demo</strong>
         <span className={styles.divider} aria-hidden="true" />
-        {name} is a fictional company. All copy is placeholder.
+        {name} is a fictional company — this page is a design demo.
       </p>
       <Link className={styles.back} href="/#work">
         <svg viewBox="0 0 16 16" width="13" height="13" aria-hidden="true">

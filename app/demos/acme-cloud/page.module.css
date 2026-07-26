@@ -23,10 +23,12 @@
 .page :where(ul) { margin: 0; padding: 0; list-style: none; }
 
 /* --- header --- */
+/*
+  Not sticky: DemoChrome's bar is already pinned at top: 0, and a second sticky
+  element at the same offset would slide underneath it. The bar carries the
+  "fictional company" disclosure and the way back, so it wins the top slot.
+*/
 .header {
-  position: sticky;
-  top: 0;
-  z-index: 100;
   display: flex;
   align-items: center;
   gap: 1rem 2rem;

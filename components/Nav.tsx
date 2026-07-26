@@ -1,13 +1,43 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Brand from "./Brand";
 import { navLinks } from "@/lib/content";
+
+/** Where the sliding pill should sit, in pixels within the link rail. */
+type Bubble = { x: number; w: number };
 
 export default function Nav() {
   const [stuck, setStuck] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [active, setActive] = useState<string>(navLinks[0].href);
+  const [hovered, setHovered] = useState<string | null>(null);
+  const [bubble, setBubble] = useState<Bubble | null>(null);
+
+  const railRef = useRef<HTMLElement>(null);
+  const linkRefs = useRef(new Map<string, HTMLAnchorElement>());
+
+  /**
+   * The pill follows the pointer when hovering and falls back to whichever
+   * section is being read. Measuring the real element keeps it correct when the
+   * labels change or the font renders differently than expected.
+   */
+  const measure = useCallback(() => {
+    const target = linkRefs.current.get(hovered ?? active);
+    if (!target) return;
+    setBubble({ x: target.offsetLeft, w: target.offsetWidth });
+  }, [hovered, active]);
+
+  useEffect(measure, [measure]);
+
+  /* Re-measure when the rail resizes — font swaps, zoom, breakpoint changes. */
+  useEffect(() => {
+    const rail = railRef.current;
+    if (!rail || typeof ResizeObserver === "undefined") return;
+    const observer = new ResizeObserver(measure);
+    observer.observe(rail);
+    return () => observer.disconnect();
+  }, [measure]);
 
   /* Condense the nav once the page has moved. */
   useEffect(() => {
@@ -63,12 +93,30 @@ export default function Nav() {
       <div className="nav__inner">
         <Brand />
 
-        <nav className="nav__links" aria-label="Primary">
+        <nav
+          className="nav__links"
+          aria-label="Primary"
+          ref={railRef}
+          onPointerLeave={() => setHovered(null)}
+        >
+          <span
+            className="nav__bubble"
+            aria-hidden="true"
+            data-ready={bubble ? "" : undefined}
+            style={bubble ? { transform: `translateX(${bubble.x}px)`, width: bubble.w } : undefined}
+          />
           {navLinks.map((link) => (
             <a
               key={link.href}
               href={link.href}
+              ref={(el) => {
+                if (el) linkRefs.current.set(link.href, el);
+                else linkRefs.current.delete(link.href);
+              }}
               className={active === link.href ? "is-active" : undefined}
+              onPointerEnter={() => setHovered(link.href)}
+              onFocus={() => setHovered(link.href)}
+              onBlur={() => setHovered(null)}
             >
               {link.label}
             </a>
