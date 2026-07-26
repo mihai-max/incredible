@@ -1,6 +1,8 @@
 /* =========================================================
    incredible.website — Web Design Studio
-   Dark, cinematic, ember-accented. Hand-built, no framework.
+   Dark, cinematic, ember-accented. Hand-written, no CSS framework.
+   Class names are BEM-namespaced and shared across the components
+   in /components — see README for why this is global rather than modules.
    ---------------------------------------------------------
    1.  Tokens
    2.  Reset & base
