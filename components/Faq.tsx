@@ -7,7 +7,7 @@ export default function Faq() {
     <section className="section" id="faq">
       <div className="shell shell--narrow">
         <header className="section__head">
-          <Eyebrow num="05">Questions</Eyebrow>
+          <Eyebrow num="04">Questions</Eyebrow>
           <h2 className="section__title" data-reveal="" data-reveal-delay={1}>
             Before you write to us.
           </h2>

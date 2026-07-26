@@ -5,8 +5,7 @@ import Manifesto from "@/components/Manifesto";
 import Work from "@/components/Work";
 import Services from "@/components/Services";
 import Process from "@/components/Process";
-import Quote from "@/components/Quote";
-import Pricing from "@/components/Pricing";
+import LetsTalk from "@/components/LetsTalk";
 import Faq from "@/components/Faq";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
@@ -25,8 +24,7 @@ export default function Home() {
         <Work />
         <Services />
         <Process />
-        <Quote />
-        <Pricing />
+        <LetsTalk />
         <Faq />
         <Contact />
       </main>

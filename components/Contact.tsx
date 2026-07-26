@@ -9,7 +9,7 @@ export default function Contact() {
       <div className="shell">
         <div className="contact__grid">
           <div className="contact__intro">
-            <Eyebrow num="06">Start a project</Eyebrow>
+            <Eyebrow num="05">Start a project</Eyebrow>
 
             <h2 className="contact__title" data-reveal="" data-reveal-delay={1}>
               Tell us what you&apos;re

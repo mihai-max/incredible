@@ -1,0 +1,320 @@
+/* ACME Cloud — light, cool-toned B2B SaaS. Deliberately unlike the studio site. */
+
+.page {
+  --ink: #10142a;
+  --ink-soft: #4a5170;
+  --ink-mute: #7b82a0;
+  --line: #e3e7f2;
+  --paper: #ffffff;
+  --wash: #f5f7fc;
+  --brand: #4457d6;
+  --brand-soft: #eef1fe;
+
+  min-height: 100vh;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, Roboto, sans-serif;
+  line-height: 1.6;
+}
+/* Element reset, scoped to this demo. :where() holds specificity at zero so the
+   component classes below always win — a plain `.page p` would outrank them. */
+.page :where(h1, h2, h3) { margin: 0; line-height: 1.15; letter-spacing: -0.025em; }
+.page :where(p) { margin: 0; }
+.page :where(ul) { margin: 0; padding: 0; list-style: none; }
+
+/* --- header --- */
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: 1rem 2rem;
+  padding: 1rem clamp(1rem, 5vw, 3rem);
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--line);
+}
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-weight: 650;
+  font-size: 1.05rem;
+  color: var(--ink);
+  text-decoration: none;
+}
+.logoMark {
+  width: 22px;
+  height: 22px;
+  border-radius: 7px;
+  background: linear-gradient(140deg, #6d7cf0, var(--brand));
+}
+.nav {
+  margin-left: auto;
+  display: flex;
+  gap: 0.4rem;
+}
+.nav a {
+  padding: 0.45rem 0.85rem;
+  border-radius: 8px;
+  color: var(--ink-soft);
+  text-decoration: none;
+  font-size: 0.94rem;
+}
+.nav a:hover { background: var(--wash); color: var(--ink); }
+.headerCta {
+  padding: 0.6rem 1.15rem;
+  border-radius: 9px;
+  background: var(--brand);
+  color: #fff;
+  text-decoration: none;
+  font-size: 0.92rem;
+  font-weight: 550;
+}
+.headerCta:hover { background: #3546c4; }
+
+/* --- buttons --- */
+.btnPrimary, .btnGhost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.85rem 1.6rem;
+  border-radius: 10px;
+  font-size: 0.98rem;
+  font-weight: 550;
+  text-decoration: none;
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+.btnPrimary { background: var(--brand); color: #fff; border: 1px solid var(--brand); }
+.btnPrimary:hover { background: #3546c4; transform: translateY(-1px); }
+.btnGhost { background: #fff; color: var(--ink); border: 1px solid var(--line); }
+.btnGhost:hover { border-color: #c3cbe3; transform: translateY(-1px); }
+
+/* --- hero --- */
+.hero {
+  padding: clamp(3.5rem, 9vw, 7rem) clamp(1rem, 5vw, 3rem) 0;
+  max-width: 1100px;
+  margin-inline: auto;
+  text-align: center;
+  background:
+    radial-gradient(60% 50% at 50% 0%, var(--brand-soft) 0%, transparent 70%);
+}
+.kicker {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--brand);
+}
+.heroTitle {
+  margin-top: 1.2rem;
+  font-size: clamp(2.2rem, 1.3rem + 3.6vw, 3.7rem);
+  font-weight: 700;
+  max-width: 22ch;
+  margin-inline: auto;
+  text-wrap: balance;
+}
+.heroTitle em { font-style: normal; color: var(--brand); }
+.heroSub {
+  margin: 1.4rem auto 0;
+  max-width: 54ch;
+  color: var(--ink-soft);
+  font-size: clamp(1rem, 0.95rem + 0.35vw, 1.16rem);
+}
+.heroActions {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 2.2rem;
+}
+
+/* --- product mock --- */
+.mock {
+  margin-top: clamp(3rem, 7vw, 5rem);
+  border: 1px solid var(--line);
+  border-radius: 16px 16px 0 0;
+  background: #fff;
+  box-shadow: 0 40px 80px -50px rgba(16, 20, 42, 0.45);
+  overflow: hidden;
+  text-align: left;
+}
+.mockBar {
+  display: flex;
+  gap: 6px;
+  padding: 0.7rem 0.9rem;
+  background: var(--wash);
+  border-bottom: 1px solid var(--line);
+}
+.mockBar span { width: 10px; height: 10px; border-radius: 50%; background: #d2d8e8; }
+.mockBody { display: grid; grid-template-columns: 180px 1fr; min-height: 260px; }
+.mockSide {
+  padding: 1.2rem 1rem;
+  border-right: 1px solid var(--line);
+  display: grid;
+  gap: 0.75rem;
+  align-content: start;
+  background: #fcfdff;
+}
+.mockSide i { height: 9px; border-radius: 5px; background: #e8ecf7; }
+.mockSide i:nth-child(1) { width: 80%; background: var(--brand-soft); }
+.mockSide i:nth-child(2) { width: 60%; }
+.mockSide i:nth-child(3) { width: 72%; }
+.mockSide i:nth-child(4) { width: 52%; }
+.mockSide i:nth-child(5) { width: 66%; }
+
+.mockMain { padding: 1.5rem; display: grid; gap: 1.4rem; align-content: start; }
+.mockChart {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  height: 140px;
+  padding-bottom: 2px;
+  border-bottom: 1px solid var(--line);
+}
+.mockChart span {
+  flex: 1;
+  border-radius: 5px 5px 0 0;
+  background: linear-gradient(180deg, #8b98f5, var(--brand));
+}
+.mockRows { display: grid; gap: 0.6rem; }
+.mockRows i { height: 9px; border-radius: 5px; background: #eef1f8; }
+.mockRows i:nth-child(2) { width: 82%; }
+.mockRows i:nth-child(3) { width: 58%; }
+
+/* --- sections --- */
+.sectionHead { max-width: 620px; margin-inline: auto; text-align: center; }
+.sectionHead h2 {
+  margin-top: 1rem;
+  font-size: clamp(1.8rem, 1.3rem + 2vw, 2.75rem);
+  font-weight: 700;
+}
+.lede { margin-top: 1rem; color: var(--ink-soft); }
+
+.features {
+  padding: clamp(4rem, 10vw, 7rem) clamp(1rem, 5vw, 3rem);
+  max-width: 1100px;
+  margin-inline: auto;
+}
+.featureGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 270px), 1fr));
+  gap: 1.25rem;
+  margin-top: 3rem;
+}
+.feature {
+  padding: 1.75rem;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: #fff;
+  transition: border-color 0.25s ease, transform 0.25s ease;
+}
+.feature:hover { border-color: #c3cbe3; transform: translateY(-3px); }
+.featureIcon {
+  display: block;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: linear-gradient(140deg, #8b98f5, var(--brand));
+}
+.feature h3 { margin-top: 1.2rem; font-size: 1.15rem; font-weight: 650; }
+.feature p { margin-top: 0.6rem; color: var(--ink-soft); font-size: 0.95rem; }
+
+/* --- plans --- */
+.plans {
+  padding: clamp(4rem, 10vw, 7rem) clamp(1rem, 5vw, 3rem);
+  background: var(--wash);
+  border-block: 1px solid var(--line);
+}
+.planGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+  gap: 1.25rem;
+  max-width: 1000px;
+  margin: 3rem auto 0;
+  align-items: start;
+}
+.plan {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 2rem;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: #fff;
+}
+.planFeatured {
+  border-color: var(--brand);
+  box-shadow: 0 30px 60px -40px rgba(68, 87, 214, 0.6);
+}
+.planBadge {
+  position: absolute;
+  top: -0.7rem;
+  left: 2rem;
+  padding: 0.25rem 0.7rem;
+  border-radius: 999px;
+  background: var(--brand);
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+.plan h3 { font-size: 1.05rem; font-weight: 650; color: var(--ink-soft); }
+.planPrice { margin-top: 0.9rem; font-size: 2.4rem; font-weight: 700; letter-spacing: -0.03em; }
+.planPrice span {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--ink-mute);
+  letter-spacing: 0;
+}
+.planBlurb { margin-top: 0.8rem; color: var(--ink-soft); font-size: 0.93rem; }
+.plan ul {
+  margin: 1.6rem 0;
+  padding-top: 1.4rem;
+  border-top: 1px solid var(--line);
+  display: grid;
+  gap: 0.65rem;
+}
+.plan li {
+  position: relative;
+  padding-left: 1.5rem;
+  font-size: 0.94rem;
+  color: var(--ink-soft);
+}
+.plan li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.52em;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--brand);
+}
+.plan > a { margin-top: auto; }
+
+/* --- closer --- */
+.closer {
+  padding: clamp(4rem, 10vw, 7rem) clamp(1rem, 5vw, 3rem);
+  text-align: center;
+}
+.closer h2 { font-size: clamp(1.8rem, 1.3rem + 2vw, 2.6rem); font-weight: 700; }
+.closer p { margin: 1.1rem auto 2rem; max-width: 48ch; color: var(--ink-soft); }
+
+/* --- footer --- */
+.footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem 2rem;
+  flex-wrap: wrap;
+  padding: 2rem clamp(1rem, 5vw, 3rem);
+  border-top: 1px solid var(--line);
+  color: var(--ink-mute);
+  font-size: 0.86rem;
+}
+
+@media (max-width: 760px) {
+  .nav { display: none; }
+  .mockBody { grid-template-columns: 1fr; }
+  .mockSide { display: none; }
+}

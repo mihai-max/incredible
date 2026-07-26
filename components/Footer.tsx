@@ -26,7 +26,7 @@ export default function Footer() {
           <p>
             &copy; {year} {site.name}. All rights reserved.
           </p>
-          <p className="footer__made">Designed &amp; built in Austin, Texas</p>
+          <p className="footer__made">Designed &amp; built in {site.city}, Germany</p>
         </div>
       </div>
     </footer>

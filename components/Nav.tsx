@@ -76,7 +76,7 @@ export default function Nav() {
         </nav>
 
         <a className="nav__cta" href="#contact">
-          Start a project
+          Let&apos;s talk
         </a>
 
         <button
@@ -99,7 +99,7 @@ export default function Nav() {
           </a>
         ))}
         <a className="nav__mobile-cta" href="#contact" onClick={() => setMenuOpen(false)}>
-          Start a project
+          Let&apos;s talk
         </a>
       </div>
     </header>

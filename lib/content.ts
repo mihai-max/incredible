@@ -1,10 +1,6 @@
 /**
  * Site copy lives here so the components stay presentational.
  * Editing the site is mostly editing this file.
- *
- * NOTE: the clients, case studies, testimonial, stats, and prices below are
- * placeholders written to demonstrate the layout. Replace them with real
- * projects before publishing.
  */
 
 export const site = {
@@ -14,72 +10,69 @@ export const site = {
   description:
     "incredible.website is a web design studio building cinematic, fast, conversion-focused websites for ambitious brands.",
   email: "hello@incredible.website",
-  phone: "+1 (512) 555-0142",
-  phoneHref: "tel:+15125550142",
-  location: "Austin, TX · remote worldwide",
+  phone: "+49 157 52466163",
+  phoneHref: "tel:+4915752466163",
+  location: "Munich, Germany · remote worldwide",
+  city: "Munich",
 } as const;
 
 export const navLinks = [
   { href: "#work", label: "Work" },
   { href: "#services", label: "Services" },
   { href: "#process", label: "Process" },
-  { href: "#pricing", label: "Pricing" },
 ] as const;
 
-export const clients = [
-  "NORTHWIND",
-  "OBSIDIAN",
-  "LUMEN LABS",
-  "ATLAS & CO",
-  "VERTA",
-  "SALTBOX",
-  "HELIOSTAT",
-  "KIN & KIND",
+/** Tools we build with — not client logos. */
+export const stack = [
+  "NEXT.JS",
+  "ASTRO",
+  "WEBFLOW",
+  "SHOPIFY",
+  "TYPESCRIPT",
+  "FIGMA",
+  "SANITY",
+  "VERCEL",
 ] as const;
 
-export const stats = [
-  { value: "60+", label: "Sites shipped" },
-  { value: "2.4×", label: "Median lift in conversion" },
-  { value: "6 wks", label: "Typical launch window" },
-  { value: "98", label: "Average Lighthouse score" },
-] as const;
-
-export type Project = {
-  id: string;
+/**
+ * Demo builds.
+ *
+ * These are real pages in this repo under /demos, built for a fictional
+ * "ACME" company with placeholder copy. They exist to show range and let
+ * a visitor click through a finished page rather than read a claim about one.
+ */
+export type Demo = {
+  slug: string;
   name: string;
   initials: string;
-  tag: string;
-  note: string;
+  kind: string;
+  summary: string;
 };
 
-export const projects: Project[] = [
+export const demos: Demo[] = [
   {
-    id: "northwind",
-    name: "Northwind",
-    initials: "NW",
-    tag: "Brand site · Webflow",
-    note: "A climate analytics platform rebuilt around one story instead of nine. +180% demo requests in the first quarter.",
+    slug: "acme-cloud",
+    name: "ACME Cloud",
+    initials: "AC",
+    kind: "SaaS product site",
+    summary:
+      "A light, spacious B2B layout: clear value proposition, feature grid, and a pricing table that reads at a glance.",
   },
   {
-    id: "obsidian",
-    name: "Obsidian",
-    initials: "OB",
-    tag: "Product marketing · Next.js",
-    note: "Security tooling made legible. Dark, quiet, and precise — with a docs experience engineers actually finish.",
+    slug: "acme-supply",
+    name: "ACME Supply Co.",
+    initials: "AS",
+    kind: "E-commerce storefront",
+    summary:
+      "An editorial shop front on warm paper stock — oversized serif, a product grid, and a lookbook rhythm.",
   },
   {
-    id: "lumen",
-    name: "Lumen Labs",
-    initials: "LL",
-    tag: "Full rebrand · Design system",
-    note: "Identity, site, and a 40-component library shipped in seven weeks. One language across every surface.",
-  },
-  {
-    id: "saltbox",
-    name: "Saltbox",
-    initials: "SB",
-    tag: "E-commerce · Shopify",
-    note: "A slow, beautiful store made fast. 1.9s to interactive on mobile and a checkout that stopped leaking.",
+    slug: "acme-bistro",
+    name: "ACME Bistro",
+    initials: "AB",
+    kind: "Restaurant & local business",
+    summary:
+      "Dark, quiet, and appetite-driven. Menu, hours, and a booking call to action that never leaves the screen.",
   },
 ];
 
@@ -142,70 +135,16 @@ export const steps: Step[] = [
   },
 ];
 
-export const testimonial = {
-  quote:
-    "We'd been through two agencies before this one. They got us to a direction in nine days and a live site in six weeks — and it's still the best-performing page we own.",
-  name: "Dana Reyes",
-  role: "VP Marketing, Northwind",
-} as const;
-
-export type Tier = {
-  name: string;
-  price: string;
-  unit: string;
-  desc: string;
-  features: string[];
-  cta: string;
-  featured?: boolean;
-  badge?: string;
-};
-
-export const tiers: Tier[] = [
-  {
-    name: "Landing",
-    price: "$6k",
-    unit: "starting",
-    desc: "One page that does one job extremely well.",
-    features: ["Strategy session", "1 art direction", "Design + build", "2 weeks"],
-    cta: "Enquire",
-  },
-  {
-    name: "Full site",
-    price: "$24k",
-    unit: "starting",
-    desc: "The whole marketing site, end to end.",
-    features: [
-      "Discovery & positioning",
-      "2 art directions",
-      "Up to 8 pages",
-      "CMS + handoff",
-      "6 weeks",
-    ],
-    cta: "Book a call",
-    featured: true,
-    badge: "Most requested",
-  },
-  {
-    name: "Partner",
-    price: "$7k",
-    unit: "/ month",
-    desc: "An embedded design team, month to month.",
-    features: [
-      "Ongoing design & build",
-      "Experiments & CRO",
-      "Priority turnaround",
-      "Cancel anytime",
-    ],
-    cta: "Enquire",
-  },
-];
-
 export type Faq = { q: string; a: string };
 
 export const faqs: Faq[] = [
   {
+    q: "What does a project cost?",
+    a: "It depends on scope, so there's no price list here. Tell us what you need and you'll get a fixed number with a fixed scope — no hourly billing and no surprise invoices.",
+  },
+  {
     q: "How soon can you start?",
-    a: "We take on two projects a month and usually book two to three weeks out. If you're on a hard deadline, say so in your first message and we'll tell you honestly whether we can hit it.",
+    a: "Usually two to three weeks out. If you're on a hard deadline, say so in your first message and you'll get an honest answer about whether it's achievable.",
   },
   {
     q: "Do you write the copy?",
@@ -226,9 +165,9 @@ export const faqs: Faq[] = [
 ];
 
 export const budgetOptions = [
-  "Under $10k",
-  "$10k – $25k",
-  "$25k – $50k",
-  "$50k+",
+  "Under €10k",
+  "€10k – €25k",
+  "€25k – €50k",
+  "€50k+",
   "Not sure yet",
 ] as const;

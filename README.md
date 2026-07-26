@@ -7,16 +7,20 @@ framework and no runtime dependencies beyond React.
 
 ```
 app/
-  layout.tsx        html shell, metadata, no-JS fallback
-  page.tsx          composes the sections
-  globals.css       design tokens + all styles
-  robots.ts         generated robots.txt
-  sitemap.ts        generated sitemap.xml
-components/         one component per section
+  layout.tsx          html shell, metadata, no-JS fallback
+  page.tsx            composes the studio site
+  globals.css         design tokens + all studio styles
+  robots.ts           generated robots.txt
+  sitemap.ts          generated sitemap.xml
+  demos/
+    acme-cloud/       demo: SaaS product site
+    acme-supply/      demo: e-commerce storefront
+    acme-bistro/      demo: restaurant / local business
+components/           one component per section
 lib/
-  content.ts        all site copy as typed data
-  stagger.ts        reveal-delay helper
-public/CNAME        custom domain for GitHub Pages
+  content.ts          all studio copy as typed data
+  stagger.ts          reveal-delay helper
+public/CNAME          custom domain for GitHub Pages
 ```
 
 ## Commands
@@ -52,7 +56,8 @@ than wrapping them. That keeps the dune SVG and every section server-rendered �
 the observer is the only thing in the bundle, and no wrapper elements disturb
 the grid layouts.
 
-The whole export is ~208 KB gzipped including all JS, CSS, and HTML.
+The whole export — studio site plus all three demos — is ~232 KB gzipped
+including every JS, CSS, and HTML file.
 
 ## Design
 
@@ -82,18 +87,44 @@ Type uses system font stacks, so there are no webfont requests and no flash of
 unstyled text. To switch to a licensed display face, use `next/font` and point
 `--font-serif` / `--font-mono` at the generated CSS variables.
 
+## Demo builds
+
+The studio site has no invented clients, case studies, testimonials, or
+performance metrics. Instead, `/demos` holds three finished pages a visitor can
+actually click into — built for a fictional "ACME" company with lorem ipsum copy:
+
+| Route | Register |
+| --- | --- |
+| `/demos/acme-cloud/` | Light B2B SaaS — cool indigo, feature grid, pricing table, UI mock |
+| `/demos/acme-supply/` | E-commerce — warm paper stock, oversized serif, product grid |
+| `/demos/acme-bistro/` | Restaurant — deep green and brass, menu, hours, booking |
+
+Each demo carries its own CSS Module and shares nothing with the studio
+stylesheet, so the three look genuinely unlike each other and unlike the studio
+site. That is the point: they demonstrate range, not a single template recoloured.
+
+`DemoChrome` pins a bar to the top of every demo stating that the company is
+fictional and the copy is placeholder, with a link back to the studio site. The
+demo pages are also `noindex` (see each page's `metadata.robots`) and are kept
+out of `sitemap.ts`, so lorem ipsum pages never compete with the real site in
+search results.
+
+To add a demo: create `app/demos/<slug>/page.tsx` and `page.module.css`, then add
+an entry to `demos` in `lib/content.ts`. The work section picks it up
+automatically. Thumbnail palettes live in `globals.css` under `.work__art--N`.
+
 ## Before this goes live
 
-Some content is placeholder and needs real values — all of it in `lib/content.ts`:
+Two things still need your input:
 
-- **Contact details** — `hello@incredible.website`, the phone number, and the
-  Austin location.
-- **Client names and case studies** — `clients`, `projects`, and `testimonial`
-  are illustrative. Replace them with real projects and a real, attributable
-  quote before publishing.
-- **Stats** — the `stats` figures ("60+ sites shipped").
-- **Pricing** — the three `tiers`.
+- **Contact details** — `site` in `lib/content.ts` holds the email, phone, and
+  Munich location. The email `hello@incredible.website` needs a real mailbox.
 - **Form delivery** — see below.
+
+The `services`, `steps`, and `faqs` entries in `lib/content.ts` describe how you
+work. They're written as sensible defaults, not facts about your business —
+read them through and adjust anything that isn't true (the FAQ mentions a two-
+to-three-week lead time and a fixed-price model, for instance).
 
 ### Contact form
 
