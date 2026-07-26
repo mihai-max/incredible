@@ -869,6 +869,57 @@ a {
   text-align: center;
 }
 
+/*
+  Honeypot. Off-screen rather than display:none — naive bots skip hidden
+  fields but fill positioned ones. Never focusable, never announced.
+*/
+.hp {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Shown only when the invisible checks don't clear a submission. */
+.challenge {
+  display: grid;
+  gap: 0.7rem;
+  padding: 1.15rem;
+  border: 1px solid rgba(255, 146, 69, 0.4);
+  border-radius: 12px;
+  background: rgba(255, 92, 26, 0.06);
+  animation: fadeUp 0.35s var(--ease);
+}
+.challenge__q {
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ember-warm);
+}
+.challenge input {
+  width: 100%;
+  max-width: 9rem;
+  padding: 0.75rem 0.9rem;
+  border: 1px solid var(--line-strong);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--ink);
+  font-family: inherit;
+  font-size: 1rem;
+  transition: border-color 0.25s var(--ease), background 0.25s var(--ease);
+}
+.challenge input:focus {
+  outline: none;
+  border-color: rgba(255, 146, 69, 0.75);
+  background: rgba(255, 255, 255, 0.07);
+}
+.challenge input[aria-invalid="true"] { border-color: #d8503a; }
+.challenge__error { font-size: 0.85rem; color: #ff9a7a; }
+
 /* ---------------------------------------------------------
    14. Footer
    --------------------------------------------------------- */

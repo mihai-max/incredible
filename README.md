@@ -184,10 +184,47 @@ work. They're written as sensible defaults, not facts about your business —
 read them through and adjust anything that isn't true (the FAQ mentions a two-
 to-three-week lead time and a fixed-price model, for instance).
 
+### Spam screening
+
+The form screens for bots invisibly first, and only shows a challenge if those
+checks don't clear it. Logic lives in `lib/humanCheck.ts`.
+
+Invisible, in order:
+
+1. **Honeypot** — a `Company website` field positioned off-screen (not
+   `display: none`, which naive bots skip), `tabindex="-1"` and inside an
+   `aria-hidden` wrapper so no visitor or screen reader ever meets it. Bots fill
+   it; people can't.
+2. **Interaction** — has any `pointerdown`, `pointermove`, `keydown`, or
+   `touchstart` been seen? Scripted submissions produce none.
+3. **Timing** — submissions less than `MIN_FILL_MS` (2.5s) after the form
+   mounted. This is measured from page load, so it is lenient by design and
+   really only catches load-and-submit bots.
+
+**A failed check never rejects the submission — it escalates to the challenge.**
+That rule is the important one: a false positive should cost someone one extra
+step, never a lost enquiry. The challenge is arithmetic ("what is 3 + 9?")
+rather than an image or audio puzzle, so it works with a screen reader, on a
+keyboard, without colour vision, and adds nothing to the page weight. A wrong
+answer re-rolls the question and does not send.
+
+Field validation still runs before any of this, so a visitor never gets a
+challenge on a submission that was going to fail anyway.
+
+**What this is not.** The site is a static export with no backend, so there is
+nothing to verify a token against and everything above runs in the visitor's
+browser — readable, and bypassable by anyone who bothers. It stops naive
+form-filling bots, which is the overwhelming majority of what a small site sees.
+It is spam friction, not a security control. For real protection the form needs
+a server: move it to a form service (below) and add
+[Cloudflare Turnstile](https://developers.cloudflare.com/turnstile/) or
+hCaptcha, verifying the token server-side. Most form services also bring their
+own spam filtering, which is stronger than anything achievable client-side.
+
 ### Contact form
 
-`ContactForm` validates, then opens the visitor's mail client via a `mailto:`
-link. That works with no backend, but it depends on the visitor having a mail
+`ContactForm` validates, screens as above, then opens the visitor's mail client
+via a `mailto:` link. That works with no backend, but it depends on the visitor having a mail
 client configured, so it will lose some enquiries.
 
 For real submissions, point it at a form service. In
