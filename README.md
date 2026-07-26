@@ -117,12 +117,30 @@ interaction feedback like the nav pill keeps animating. Full-viewport scrolling
 *is* large-field motion, so that stays off — flip
 `RESPECT_REDUCED_MOTION` in `SmoothScroll.tsx` if you want it eased regardless.
 
-If the eased scroll doesn't appear on your own machine, check whether your OS has
-reduce motion enabled:
+If the eased scroll doesn't appear on your own machine, check whether the OS is
+asking for reduced motion:
 
 ```js
-matchMedia('(prefers-reduced-motion: reduce)').matches
+({
+  reduceMotion: matchMedia('(prefers-reduced-motion: reduce)').matches,
+  jsRan: !!document.querySelector('.nav__bubble')?.getAttribute('style'),
+})
 ```
+
+`reduceMotion: true` means the eased scroll is being suppressed on purpose.
+`jsRan: false` means the JavaScript never ran at all — check the `basePath`
+trap in the deployment section below.
+
+**Windows Server reports reduced motion by default.** Server SKUs ship with
+Visual Effects set to *"Adjust for best performance"*, which unchecks "Animate
+controls and elements inside windows". That flag is `SPI_GETCLIENTAREAANIMATION`,
+which is exactly what Chrome and Edge translate into
+`prefers-reduced-motion: reduce` — so a Server desktop suppresses the eased
+scroll without anyone having chosen an accessibility setting. It is a
+performance default, not a user preference, and it makes a Server desktop a poor
+place to judge the site's motion. Turn it on under Ease of Access → Display →
+"Show animations in Windows", or via System Properties → Advanced → Performance
+→ Settings → Visual Effects.
 
 ## Demo builds
 
