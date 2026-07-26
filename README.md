@@ -91,7 +91,7 @@ unstyled text. To switch to a licensed display face, use `next/font` and point
 
 ### Motion
 
-Two deliberate pieces of motion, both disabled under `prefers-reduced-motion`:
+Two deliberate pieces of motion:
 
 - **The nav pill travels.** Rather than each link painting its own background on
   hover, a single `.nav__bubble` slides and resizes between them. `Nav.tsx`
@@ -107,6 +107,22 @@ Two deliberate pieces of motion, both disabled under `prefers-reduced-motion`:
   520–1250ms, so a jump to the footer doesn't crawl and a short hop doesn't drag.
   Each `window.scrollTo` passes `behavior: "instant"` so the CSS fallback can't
   fight the animation frame by frame.
+
+**On `prefers-reduced-motion`.** The common
+`*, *::before, *::after { transition-duration: 0.01ms !important }` snippet kills
+every transition on the page, which makes the UI feel broken rather than calm —
+the nav pill teleports and buttons snap. The rule here is targeted instead: the
+marquee loop, hero parallax, and reveal slides are switched off, while small
+interaction feedback like the nav pill keeps animating. Full-viewport scrolling
+*is* large-field motion, so that stays off — flip
+`RESPECT_REDUCED_MOTION` in `SmoothScroll.tsx` if you want it eased regardless.
+
+If the eased scroll doesn't appear on your own machine, check whether your OS has
+reduce motion enabled:
+
+```js
+matchMedia('(prefers-reduced-motion: reduce)').matches
+```
 
 ## Demo builds
 

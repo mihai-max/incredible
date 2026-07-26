@@ -2,6 +2,25 @@
 
 import { useEffect } from "react";
 
+/**
+ * Whether the visitor's "reduce motion" setting turns the eased scroll off.
+ *
+ * Scrolling the whole viewport is large-field motion, which is exactly what
+ * that preference exists to stop — so this defaults to `true` and such visitors
+ * get an instant jump instead.
+ *
+ * The catch: if *you* have reduce motion enabled in your OS (macOS: Settings →
+ * Accessibility → Display → Reduce motion; Windows: Accessibility → Visual
+ * effects → Animation effects), you will never see the eased scroll on your own
+ * site. Check with this in the browser console:
+ *
+ *   matchMedia('(prefers-reduced-motion: reduce)').matches
+ *
+ * Set this to `false` to ease for everyone regardless. That is a real
+ * accessibility trade-off, not just a preference — make it deliberately.
+ */
+const RESPECT_REDUCED_MOTION = true;
+
 /** Sits between these bounds; longer jumps take longer, but not proportionally. */
 const MIN_DURATION = 520;
 const MAX_DURATION = 1250;
@@ -31,7 +50,9 @@ export default function SmoothScroll({
   offset?: number;
 }) {
   useEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (RESPECT_REDUCED_MOTION && window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      return;
+    }
 
     let frame = 0;
 

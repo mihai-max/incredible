@@ -923,13 +923,36 @@ a {
 }
 
 /* reduced motion */
+/*
+  Targeted, not blanket.
+
+  The usual `*, *::before, *::after { transition-duration: 0.01ms !important }`
+  snippet kills every transition on the page, which makes the interface feel
+  broken rather than calm — the nav pill teleports, buttons snap, nothing reads
+  as deliberate. What this preference is actually about is large-field motion:
+  parallax, looping marquees, long slides, spin and zoom.
+
+  So: big motion off, small interaction feedback kept. A pill sliding a few
+  hundred pixels under the cursor, or a colour fading on hover, stays.
+  Full-viewport scrolling does not — see SmoothScroll.tsx.
+*/
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  *, *::before, *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
-  [data-reveal] { opacity: 1; transform: none; }
+
+  /* Looping and continuous motion. */
   .marquee__track { animation: none; }
+
+  /* Parallax: belt and braces — HeroParallax also bails out in JS. */
+  .hero__scene { transform: none !important; }
+
+  /* Reveals land in place instead of sliding up. */
+  [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+
+  /* Decorative entrance animations. */
+  .nav__mobile,
+  .faq details p { animation: none; }
 }
