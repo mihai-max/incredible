@@ -22,20 +22,20 @@ const empty: Fields = {
 };
 
 /**
- * Validates, screens for bots, then hands off to the visitor's mail client.
+ * Validates, screens for bots, then POSTs to /api/contact, which holds the
+ * Resend key and sends the mail server-side. The key never reaches the browser.
  *
  * Bot screening is invisible by default (honeypot, interaction, timing) and
  * escalates to an arithmetic challenge rather than rejecting — see
- * lib/humanCheck.ts for why, and for what this does and doesn't protect.
- *
- * There is no backend here. That works with zero infrastructure but depends on
- * the visitor having a mail client configured, so it will lose some enquiries —
- * see the README for swapping in a form service.
+ * lib/humanCheck.ts for why, and for what this does and doesn't protect. The
+ * honeypot is re-checked on the server, where it can't be bypassed.
  */
 export default function ContactForm() {
   const [fields, setFields] = useState<Fields>(empty);
   const [invalid, setInvalid] = useState<Set<FieldName>>(new Set());
   const [status, setStatus] = useState("");
+  const [sending, setSending] = useState(false);
+  const [failed, setFailed] = useState(false);
 
   // Bot screening state.
   const [honeypot, setHoneypot] = useState("");
@@ -77,29 +77,52 @@ export default function ContactForm() {
     });
   };
 
-  const send = () => {
-    const subject = `New project enquiry — ${fields.name.trim()}`;
-    const body = [
-      `Name: ${fields.name.trim()}`,
-      `Email: ${fields.email.trim()}`,
-      `Budget: ${fields.budget}`,
-      "",
-      fields.brief.trim(),
-    ].join("\n");
+  const send = async () => {
+    setSending(true);
+    setFailed(false);
+    setStatus("Sending…");
 
-    window.location.href = `mailto:${site.email}?subject=${encodeURIComponent(
-      subject,
-    )}&body=${encodeURIComponent(body)}`;
+    try {
+      // Trailing slash matters: next.config sets trailingSlash: true, so
+      // "/api/contact" 308-redirects here. POST survives the redirect, but
+      // hitting the final URL directly saves a round trip on every submission.
+      const response = await fetch("/api/contact/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: fields.name.trim(),
+          email: fields.email.trim(),
+          budget: fields.budget,
+          brief: fields.brief.trim(),
+          "company-website": honeypot,
+        }),
+      });
 
-    setStatus("Opening your email client — send it and we'll reply within a day.");
-    setFields(empty);
-    setChallenge(null);
-    setChallengeInput("");
-    setChallengeError("");
+      if (!response.ok) {
+        const data = (await response.json().catch(() => ({}))) as { error?: string };
+        setFailed(true);
+        setStatus(data.error ?? "Something went wrong sending that.");
+        return;
+      }
+
+      setStatus("Thanks — that's with us. We'll reply within one business day.");
+      setFields(empty);
+      setChallenge(null);
+      setChallengeInput("");
+      setChallengeError("");
+      setHoneypot("");
+    } catch {
+      // Offline, blocked, or the endpoint is unreachable.
+      setFailed(true);
+      setStatus("Couldn't reach the server.");
+    } finally {
+      setSending(false);
+    }
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (sending) return;
 
     const missing: FieldName[] = [];
     const malformed: FieldName[] = [];
@@ -129,7 +152,7 @@ export default function ContactForm() {
         setChallengeError("Not quite — here's another one.");
         return;
       }
-      send();
+      void send();
       return;
     }
 
@@ -142,13 +165,27 @@ export default function ContactForm() {
       return;
     }
 
-    send();
+    void send();
   };
 
   const flag = (field: FieldName) => (invalid.has(field) ? true : undefined);
 
   return (
-    <form className="form" onSubmit={handleSubmit} noValidate data-reveal="" data-reveal-delay={2}>
+    /*
+      method/action matter even though JS normally intercepts the submit. A form
+      with neither falls back to GET against the current page, which serialises
+      the visitor's message into the query string and loses it. With these, a
+      submission still reaches the endpoint if the bundle fails to load.
+    */
+    <form
+      className="form"
+      method="post"
+      action="/api/contact/"
+      onSubmit={handleSubmit}
+      noValidate
+      data-reveal=""
+      data-reveal-delay={2}
+    >
       <div className="field">
         <label htmlFor="name">Name</label>
         <input
@@ -250,12 +287,22 @@ export default function ContactForm() {
         </div>
       ) : null}
 
-      <button className="btn btn--cream btn--block" type="submit">
-        {challenge ? "Confirm and send" : "Send enquiry"}
+      <button className="btn btn--cream btn--block" type="submit" disabled={sending}>
+        {sending ? "Sending…" : challenge ? "Confirm and send" : "Send enquiry"}
       </button>
 
-      <p className="form__status" role="status" aria-live="polite">
+      <p
+        className={`form__status${failed ? " form__status--error" : ""}`}
+        role="status"
+        aria-live="polite"
+      >
         {status}
+        {failed ? (
+          <>
+            {" "}
+            Email us directly at <a href={`mailto:${site.email}`}>{site.email}</a>.
+          </>
+        ) : null}
       </p>
     </form>
   );

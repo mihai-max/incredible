@@ -15,7 +15,11 @@
  * via CORS anyway.
  */
 
-const RESEND_ENDPOINT = "https://api.resend.com/emails";
+/**
+ * Overridable so the request can be pointed at a local mock in tests or a
+ * staging capture. Leave unset everywhere except local testing.
+ */
+const RESEND_ENDPOINT = process.env.RESEND_API_URL ?? "https://api.resend.com/emails";
 
 export type Enquiry = {
   name: string;

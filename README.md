@@ -2,8 +2,10 @@
 
 Marketing site for **incredible.website**, a web design studio.
 
-Next.js 16 (App Router) + TypeScript, exported as a static site. No CSS
-framework and no runtime dependencies beyond React.
+Next.js 16 (App Router) + TypeScript. No CSS framework and no runtime
+dependencies beyond React. The contact form posts to a server route that sends
+mail through Resend, so this needs a Node host — it is no longer a static
+export.
 
 ```
 app/
@@ -12,6 +14,7 @@ app/
   globals.css         design tokens + all studio styles
   robots.ts           generated robots.txt
   sitemap.ts          generated sitemap.xml
+  api/contact/        POST endpoint — validates, screens, sends via Resend
   demos/
     acme-cloud/       demo: SaaS product site
     acme-supply/      demo: e-commerce storefront
@@ -19,22 +22,24 @@ app/
 components/           one component per section
 lib/
   content.ts          all studio copy as typed data
+  enquiry.ts          SERVER ONLY — validation + the Resend call
+  humanCheck.ts       bot heuristics and the challenge
+  rateLimit.ts        SERVER ONLY — best-effort per-IP limiting
   stagger.ts          reveal-delay helper
-public/CNAME          custom domain for GitHub Pages
+.env.example          the variables you need to set
 ```
 
 ## Commands
 
 ```bash
 npm install
-npm run dev        # http://localhost:3000
-npm run build      # static export into out/
+cp .env.example .env.local   # then fill in RESEND_API_KEY
+npm run dev                  # http://localhost:3000
+npm run build
+npm start                    # production server
 npm run lint
 npm run typecheck
 ```
-
-`npm run build` writes a fully static site to `out/` — plain HTML, CSS, and JS
-with no Node server at runtime.
 
 ## Architecture
 
@@ -58,8 +63,7 @@ than wrapping them. That keeps the dune SVG and every section server-rendered �
 the observer is the only thing in the bundle, and no wrapper elements disturb
 the grid layouts.
 
-The whole export — studio site plus all three demos — is ~233 KB gzipped
-including every JS, CSS, and HTML file.
+The client bundle — studio site plus all three demos — is ~233 KB gzipped.
 
 ## Design
 
@@ -211,15 +215,18 @@ answer re-rolls the question and does not send.
 Field validation still runs before any of this, so a visitor never gets a
 challenge on a submission that was going to fail anyway.
 
-**What this is not.** The site is a static export with no backend, so there is
-nothing to verify a token against and everything above runs in the visitor's
-browser — readable, and bypassable by anyone who bothers. It stops naive
-form-filling bots, which is the overwhelming majority of what a small site sees.
-It is spam friction, not a security control. For real protection the form needs
-a server: move it to a form service (below) and add
-[Cloudflare Turnstile](https://developers.cloudflare.com/turnstile/) or
-hCaptcha, verifying the token server-side. Most form services also bring their
-own spam filtering, which is stronger than anything achievable client-side.
+**Server-side too.** The honeypot is re-checked in `app/api/contact/route.ts`,
+where it cannot be bypassed — a bot posting straight at the endpoint never loads
+the page, so the browser-side checks mean nothing to it. That request is answered
+`200` rather than an error: a bot that learns it was caught adapts, and there is
+no real visitor to inform. The endpoint also rate-limits per IP (5 per 10
+minutes, best-effort — see `lib/rateLimit.ts` for why "best-effort").
+
+**What this still is not.** The invisible checks and the challenge run in the
+browser and are readable by anyone who looks. They stop naive form-filling bots,
+which is most of what a small site sees. For a stronger guarantee, add
+[Cloudflare Turnstile](https://developers.cloudflare.com/turnstile/) and verify
+its token inside the route handler — the server side now exists to do that.
 
 ### Contact form
 
@@ -249,59 +256,62 @@ if (res.ok) setFields(empty);
 Make `handleSubmit` `async` and wrap that in `try`/`catch` so a network failure
 still shows the fallback message.
 
-## Deploying to incredible.website
+## Sending mail
 
-GitHub Pages cannot build Next.js from source, so
-`.github/workflows/nextjs.yml` builds the site and publishes `out/`. It triggers
-on pushes to `claude/web-design-business-site-wzh6lj` and can be run manually
-from the Actions tab.
+The form POSTs to `/api/contact/`, which validates, screens for bots, and calls
+Resend. **The API key never reaches the browser** — two things keep it there:
 
-Two things to know about that workflow:
+- `lib/enquiry.ts` is imported only by server code. Importing it from a
+  `"use client"` file would bundle the key read into the browser.
+- The variable is `RESEND_API_KEY`, deliberately **not** `NEXT_PUBLIC_*`. That
+  prefix is exactly what tells Next.js to inline a value into the client bundle.
 
-- **It only deploys from that branch.** Merging to `main` will not publish
-  anything until you add `main` to its `on.push.branches` list.
-- **It sets `static_site_generator: next`,** which lets `configure-pages` inject
-  a `basePath` into the Next config automatically. That is correct for a project
-  site served from `<user>.github.io/<repo>/`, but wrong for an apex custom
-  domain, where the site is served from `/`. Configure the custom domain in
-  Settings → Pages *before* the first deploy so Pages reports
-  `https://incredible.website/` and no `basePath` is injected. If CSS and JS
-  come back 404 on the live site, an injected `basePath` is the first thing to
-  check — remove the `static_site_generator` line to opt out.
+The browser only ever posts form fields to our own origin. It never holds the key
+and never talks to Resend directly, which would fail CORS regardless.
 
-1. **Settings → Pages**, set **Source** to **GitHub Actions** (not "Deploy from
-   a branch"), and set the custom domain to `incredible.website`.
-2. Point DNS at GitHub. For the apex domain, four `A` records:
+Set three variables in the host's dashboard (see `.env.example`):
 
-   ```
-   185.199.108.153
-   185.199.109.153
-   185.199.110.153
-   185.199.111.153
-   ```
+| Variable | Notes |
+| --- | --- |
+| `RESEND_API_KEY` | From <https://resend.com/api-keys>. Never commit it. |
+| `MAIL_FROM` | Must be on a domain verified at <https://resend.com/domains>. Use `onboarding@resend.dev` until `incredible.website` is verified. |
+| `MAIL_TO` | Where enquiries land. |
 
-   and the matching `AAAA` records:
+`reply_to` is set to the enquirer, so replying in your mail client goes straight
+back to them. Newlines are stripped from header values (header injection) and
+every interpolated value is escaped in the HTML body. Resend's error responses
+are logged server-side and never echoed to the browser.
 
-   ```
-   2606:50c0:8000::153
-   2606:50c0:8001::153
-   2606:50c0:8002::153
-   2606:50c0:8003::153
-   ```
+### It works without JavaScript
 
-   Add a `CNAME` record for `www` → `<username>.github.io`.
+The form carries `method="post" action="/api/contact/"`. That matters more than
+it looks: a form with neither falls back to **GET against the current page**,
+which serialises the visitor's message into the query string and loses it. With
+them, a submission still reaches the endpoint if the bundle fails to load, and
+the route replies with a plain HTML confirmation. Both paths are tested.
 
-   These are GitHub's published Pages addresses — worth checking them against
-   [the current docs](https://docs.github.com/pages/configuring-a-custom-domain-for-your-github-pages-site)
-   when you set it up, since they can change.
-3. Once DNS resolves, tick **Enforce HTTPS** in Settings → Pages.
+## Deploying to Vercel
 
-`public/CNAME` is copied into `out/` on every build, so the custom domain
-survives redeploys.
+This site can no longer go on GitHub Pages — Pages runs no server code, so
+`/api/contact` would 404 and the form would break. (Confirmed rather than
+assumed: building with `output: "export"` and a route handler present succeeds,
+but never writes `out/api/`.) The Pages workflow and `public/CNAME` have been
+removed.
 
-Netlify, Vercel, and Cloudflare Pages also work — build command `npm run build`,
-publish directory `out`. On Vercel you can drop `output: "export"` from
-`next.config.ts` to get server rendering instead.
+1. Import the repo at <https://vercel.com/new>. Next.js is detected; no build
+   configuration needed.
+2. **Settings → Environment Variables**, add the three above for Production
+   (and Preview, if you want the form working there).
+3. **Settings → Domains**, add `incredible.website`, and follow Vercel's DNS
+   instructions — an `A` record at the apex, `CNAME` for `www`. Remove the old
+   GitHub Pages `A`/`AAAA` records once it resolves.
+4. Verify `incredible.website` in Resend so `MAIL_FROM` can use it.
+
+Until DNS moves, GitHub Pages keeps serving whatever it last built, so there is
+no outage during the switch.
+
+Netlify and Cloudflare Pages both run Next route handlers too, if you'd rather
+use those — same environment variables, same build command.
 
 ## Accessibility & performance
 
@@ -320,7 +330,6 @@ broken in-page anchors, and full content visible both under
 ### A note on `npm audit`
 
 `npm audit` reports advisories in `postcss` and `sharp`. Both are transitive
-build-time dependencies of Next itself — neither is shipped to the browser, and
-`sharp` isn't used at all in a static export. `npm audit fix --force` "resolves"
-them by downgrading to Next 9, which is not a fix. Leave them until Next bumps
-its own dependencies.
+dependencies of Next itself — neither is shipped to the browser. `npm audit fix --force` "resolves" them by
+downgrading to Next 9, which is not a fix. Leave them until Next bumps its own
+dependencies.

@@ -868,6 +868,14 @@ a {
   color: var(--ember-warm);
   text-align: center;
 }
+.form__status--error { color: #ff9a7a; }
+.form__status a { color: inherit; border-bottom: 1px solid currentColor; }
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: progress;
+  transform: none;
+}
 
 /*
   Honeypot. Off-screen rather than display:none — naive bots skip hidden
