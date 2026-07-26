@@ -156,12 +156,26 @@ still shows the fallback message.
 
 ## Deploying to incredible.website
 
-GitHub Pages cannot build Next.js from source, so `.github/workflows/deploy.yml`
-runs lint, typecheck, and build, then publishes `out/`. It triggers on pushes to
-`main` and can be run manually.
+GitHub Pages cannot build Next.js from source, so
+`.github/workflows/nextjs.yml` builds the site and publishes `out/`. It triggers
+on pushes to `claude/web-design-business-site-wzh6lj` and can be run manually
+from the Actions tab.
+
+Two things to know about that workflow:
+
+- **It only deploys from that branch.** Merging to `main` will not publish
+  anything until you add `main` to its `on.push.branches` list.
+- **It sets `static_site_generator: next`,** which lets `configure-pages` inject
+  a `basePath` into the Next config automatically. That is correct for a project
+  site served from `<user>.github.io/<repo>/`, but wrong for an apex custom
+  domain, where the site is served from `/`. Configure the custom domain in
+  Settings → Pages *before* the first deploy so Pages reports
+  `https://incredible.website/` and no `basePath` is injected. If CSS and JS
+  come back 404 on the live site, an injected `basePath` is the first thing to
+  check — remove the `static_site_generator` line to opt out.
 
 1. **Settings → Pages**, set **Source** to **GitHub Actions** (not "Deploy from
-   a branch").
+   a branch"), and set the custom domain to `incredible.website`.
 2. Point DNS at GitHub. For the apex domain, four `A` records:
 
    ```
