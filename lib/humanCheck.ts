@@ -3,14 +3,15 @@
  *
  * IMPORTANT — what this is and is not.
  *
- * This site is a static export with no backend, so there is nothing to verify a
- * token against. Everything here runs in the visitor's browser and is therefore
- * trivially bypassed by anyone who bothers to read the source. It exists to stop
- * naive form-filling bots, which is the overwhelming majority of what a small
- * site sees. It is not a security control.
+ * Everything here runs in the visitor's browser and is therefore trivially
+ * bypassed by anyone who bothers to read the source. It exists to stop naive
+ * form-filling bots, which is the overwhelming majority of what a small site
+ * sees. It is not a security control.
  *
- * If the form later posts to a real endpoint, replace this with Cloudflare
- * Turnstile or hCaptcha and verify the token server-side. See the README.
+ * The honeypot is the one check that is re-run server-side, in
+ * app/api/contact/route.ts, where it cannot be bypassed. For a stronger
+ * guarantee, add Cloudflare Turnstile or hCaptcha and verify the token in that
+ * route handler. See the README.
  *
  * The design rule here: a failed check must never reject a submission outright,
  * only escalate to the visible challenge. A false positive should cost someone
@@ -49,8 +50,8 @@ export type Challenge = { a: number; b: number; answer: number };
  * it reads fine in a screen reader, needs no colour vision, works on a
  * keyboard, and adds nothing to the page weight.
  *
- * Single digits that sum past ten, so the answer is never guessable from
- * one operand and there is no carrying beyond one column.
+ * Both operands are 2–9 — never 0 or 1, so the answer is never guessable from
+ * one operand, and the sum stays inside two columns.
  *
  * Call only in an event handler or effect — never during render, or the
  * server and client markup will disagree.

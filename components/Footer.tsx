@@ -4,8 +4,9 @@ import { navLinks, site } from "@/lib/content";
 const footerLinks = [...navLinks, { href: "#faq", label: "FAQ" }];
 
 export default function Footer() {
-  // Baked at build time. This is a static export, so the year advances when the
-  // site is next rebuilt rather than at midnight on New Year's Eve.
+  // Baked at build time — this page is statically prerendered, so the year
+  // advances when the site is next rebuilt rather than at midnight on New
+  // Year's Eve.
   const year = new Date().getFullYear();
 
   return (
