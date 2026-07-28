@@ -132,8 +132,8 @@ asking for reduced motion:
 ```
 
 `reduceMotion: true` means the eased scroll is being suppressed on purpose.
-`jsRan: false` means the JavaScript never ran at all — check the `basePath`
-trap in the deployment section below.
+`jsRan: false` means the JavaScript never ran at all — check the console and
+network tab for a bundle that failed to load.
 
 **Windows Server reports reduced motion by default.** Server SKUs ship with
 Visual Effects set to *"Adjust for best performance"*, which unchecks "Animate
@@ -175,6 +175,40 @@ To add a demo: create `app/demos/<slug>/page.tsx` and `page.module.css`, then ad
 an entry to `demos` in `lib/content.ts`. The work section picks it up
 automatically. Thumbnail palettes live in `globals.css` under `.work__art--N`.
 
+## Sending mail
+
+The form POSTs to `/api/contact/`, which validates, screens for bots, and calls
+Resend. **The API key never reaches the browser** — two things keep it there:
+
+- `lib/enquiry.ts` is imported only by server code. Importing it from a
+  `"use client"` file would bundle the key read into the browser.
+- The variable is `RESEND_API_KEY`, deliberately **not** `NEXT_PUBLIC_*`. That
+  prefix is exactly what tells Next.js to inline a value into the client bundle.
+
+The browser only ever posts form fields to our own origin. It never holds the key
+and never talks to Resend directly, which would fail CORS regardless.
+
+Set three variables in the host's dashboard (see `.env.example`):
+
+| Variable | Notes |
+| --- | --- |
+| `RESEND_API_KEY` | From <https://resend.com/api-keys>. Never commit it. |
+| `MAIL_FROM` | Must be on a domain verified at <https://resend.com/domains>. Use `onboarding@resend.dev` until `incredible.website` is verified. |
+| `MAIL_TO` | Where enquiries land. |
+
+`reply_to` is set to the enquirer, so replying in your mail client goes straight
+back to them. Newlines are stripped from header values (header injection) and
+every interpolated value is escaped in the HTML body. Resend's error responses
+are logged server-side and never echoed to the browser.
+
+### It works without JavaScript
+
+The form carries `method="post" action="/api/contact/"`. That matters more than
+it looks: a form with neither falls back to **GET against the current page**,
+which serialises the visitor's message into the query string and loses it. With
+them, a submission still reaches the endpoint if the bundle fails to load, and
+the route replies with a plain HTML confirmation.
+
 ### Spam screening
 
 The form screens for bots invisibly first, and only shows a challenge if those
@@ -214,68 +248,6 @@ browser and are readable by anyone who looks. They stop naive form-filling bots,
 which is most of what a small site sees. For a stronger guarantee, add
 [Cloudflare Turnstile](https://developers.cloudflare.com/turnstile/) and verify
 its token inside the route handler — the server side now exists to do that.
-
-### Contact form
-
-`ContactForm` validates, screens as above, then opens the visitor's mail client
-via a `mailto:` link. That works with no backend, but it depends on the visitor having a mail
-client configured, so it will lose some enquiries.
-
-For real submissions, point it at a form service. In
-`components/ContactForm.tsx`, replace the `window.location.href = "mailto:..."`
-assignment with a POST:
-
-```ts
-const res = await fetch("https://formspree.io/f/YOUR_ID", {
-  method: "POST",
-  headers: { "Content-Type": "application/json", Accept: "application/json" },
-  body: JSON.stringify(fields),
-});
-
-setStatus(
-  res.ok
-    ? "Thanks — we'll reply within a business day."
-    : `Something went wrong. Email ${site.email} instead.`,
-);
-if (res.ok) setFields(empty);
-```
-
-Make `handleSubmit` `async` and wrap that in `try`/`catch` so a network failure
-still shows the fallback message.
-
-## Sending mail
-
-The form POSTs to `/api/contact/`, which validates, screens for bots, and calls
-Resend. **The API key never reaches the browser** — two things keep it there:
-
-- `lib/enquiry.ts` is imported only by server code. Importing it from a
-  `"use client"` file would bundle the key read into the browser.
-- The variable is `RESEND_API_KEY`, deliberately **not** `NEXT_PUBLIC_*`. That
-  prefix is exactly what tells Next.js to inline a value into the client bundle.
-
-The browser only ever posts form fields to our own origin. It never holds the key
-and never talks to Resend directly, which would fail CORS regardless.
-
-Set three variables in the host's dashboard (see `.env.example`):
-
-| Variable | Notes |
-| --- | --- |
-| `RESEND_API_KEY` | From <https://resend.com/api-keys>. Never commit it. |
-| `MAIL_FROM` | Must be on a domain verified at <https://resend.com/domains>. Use `onboarding@resend.dev` until `incredible.website` is verified. |
-| `MAIL_TO` | Where enquiries land. |
-
-`reply_to` is set to the enquirer, so replying in your mail client goes straight
-back to them. Newlines are stripped from header values (header injection) and
-every interpolated value is escaped in the HTML body. Resend's error responses
-are logged server-side and never echoed to the browser.
-
-### It works without JavaScript
-
-The form carries `method="post" action="/api/contact/"`. That matters more than
-it looks: a form with neither falls back to **GET against the current page**,
-which serialises the visitor's message into the query string and loses it. With
-them, a submission still reaches the endpoint if the bundle fails to load, and
-the route replies with a plain HTML confirmation. Both paths are tested.
 
 ## Deploying to Vercel
 
