@@ -175,19 +175,6 @@ To add a demo: create `app/demos/<slug>/page.tsx` and `page.module.css`, then ad
 an entry to `demos` in `lib/content.ts`. The work section picks it up
 automatically. Thumbnail palettes live in `globals.css` under `.work__art--N`.
 
-## Before this goes live
-
-Two things still need your input:
-
-- **Contact details** — `site` in `lib/content.ts` holds the email, phone, and
-  Munich location. The email `hello@incredible.website` needs a real mailbox.
-- **Form delivery** — see below.
-
-The `services`, `steps`, and `faqs` entries in `lib/content.ts` describe how you
-work. They're written as sensible defaults, not facts about your business —
-read them through and adjust anything that isn't true (the FAQ mentions a two-
-to-three-week lead time and a fixed-price model, for instance).
-
 ### Spam screening
 
 The form screens for bots invisibly first, and only shows a challenge if those
