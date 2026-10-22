@@ -35,44 +35,32 @@ export const stack = [
 ] as const;
 
 /**
- * Demo builds.
- *
- * These are real pages in this repo under /demos, built for a fictional
- * "ACME" company with placeholder copy. They exist to show range and let
- * a visitor click through a finished page rather than read a claim about one.
+ * Live sites we've built. Each card links out to the real thing.
  */
-export type Demo = {
-  slug: string;
+export type Project = {
+  url: string;
   name: string;
   initials: string;
   kind: string;
   summary: string;
 };
 
-export const demos: Demo[] = [
+export const projects: Project[] = [
   {
-    slug: "acme-cloud",
-    name: "ACME Cloud",
-    initials: "AC",
-    kind: "SaaS product site",
+    url: "https://izvorulalb.org",
+    name: "Fundația Izvorul Alb",
+    initials: "IA",
+    kind: "Charity foundation",
     summary:
-      "A light, spacious B2B layout: clear value proposition, feature grid, and a pricing table that reads at a glance.",
+      "A village foundation in Bicaz, Neamț: its projects, news, and a podcast of local voices, with online donations through Stripe.",
   },
   {
-    slug: "acme-supply",
-    name: "ACME Supply Co.",
-    initials: "AS",
-    kind: "E-commerce storefront",
+    url: "https://critzcross.your.incredible.website",
+    name: "Critz Cross",
+    initials: "CC",
+    kind: "Guesthouse",
     summary:
-      "An editorial shop front on warm paper stock — oversized serif, a product grid, and a lookbook rhythm.",
-  },
-  {
-    slug: "acme-bistro",
-    name: "ACME Bistro",
-    initials: "AB",
-    kind: "Restaurant & local business",
-    summary:
-      "Dark, quiet, and appetite-driven. Menu, hours, and a booking call to action that never leaves the screen.",
+      "Four rooms in a restored 1900 Saxon house in Criț, Transylvania. Rooms, breakfast, and the herbal sauna.",
   },
 ];
 
