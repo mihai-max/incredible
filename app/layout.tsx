@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import CookieConsent from "@/components/CookieConsent";
 import { site } from "@/lib/content";
 import "./globals.css";
 
@@ -49,6 +50,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           Skip to content
         </a>
         {children}
+        <CookieConsent />
       </body>
     </html>
   );

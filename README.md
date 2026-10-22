@@ -43,7 +43,7 @@ npm run typecheck
 project lives in `lib/content.ts` as typed data. The section components map
 over it. Editing the studio site is mostly editing that one file.
 
-**Almost everything is a server component.** Only five pieces ship JavaScript:
+**Almost everything is a server component.** Only these pieces ship JavaScript:
 
 | Component | Why it's a client component |
 | --- | --- |
@@ -52,6 +52,8 @@ over it. Editing the studio site is mostly editing that one file.
 | `Reveal` | the IntersectionObserver that fades sections in |
 | `HeroParallax` | drifts the hero as you scroll |
 | `SmoothScroll` | eased in-page scrolling |
+| `CookieConsent` | the cookie banner, and the GA loader it gates |
+| `CookieSettings` | footer link that reopens the banner |
 
 `Reveal` and `HeroParallax` deliberately target elements from outside rather
 than wrapping them. That keeps the dune SVG and every section server-rendered —
@@ -153,6 +155,24 @@ visitor can click through:
 To add one: add an entry to `projects` in `lib/content.ts`. The work section
 picks it up automatically. Thumbnail palettes live in `globals.css` under
 `.work__art--N`, one per card in order.
+
+## Analytics and cookies
+
+Google Analytics 4 is opt-in. Set `NEXT_PUBLIC_GA_ID` to your measurement ID
+(`G-XXXXXXXXXX`) in the host's dashboard and rebuild; leave it unset and the
+site ships with no analytics, no banner, and no "Cookie settings" link.
+
+With an ID set, a banner asks first-time visitors to accept or decline. Until
+they accept, the gtag script is not requested at all, so no cookies are set and
+nothing reaches Google. Both buttons carry equal weight, as EU consent rules
+expect. The choice is kept in `localStorage` (`consent.analytics`), and the
+footer's "Cookie settings" brings the banner back. Withdrawing consent deletes
+the `_ga` cookies and reloads the page so collection stops immediately. Logic
+lives in `lib/consent.ts`.
+
+The banner is client-only, so it never appears in the prerendered HTML: returning
+visitors don't see it flash, and without JavaScript there is neither a banner nor
+analytics.
 
 ## Sending mail
 
