@@ -12,7 +12,7 @@ export default function Hero() {
       <HeroParallax />
 
       <div className="hero__content shell">
-        <Eyebrow>Web design studio · est. 2019</Eyebrow>
+        <Eyebrow>Web design studio · est. 2025</Eyebrow>
 
         <h1 className="hero__title" data-reveal="" data-reveal-delay={1}>
           <span className="hero__title-line">FIND CLARITY IN</span>

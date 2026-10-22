@@ -556,13 +556,11 @@ a {
   opacity: 0.35;
   mix-blend-mode: overlay;
 }
-/* Each thumbnail previews the palette of the demo it links to. */
-.work__art--1 { background:                    /* ACME Cloud — light SaaS */
-  radial-gradient(120% 120% at 22% 10%, #f4f6fb 0%, #c9d4ef 30%, #7d8fc4 62%, #2f3a5c 100%); }
-.work__art--2 { background:                    /* ACME Supply — warm paper */
-  radial-gradient(115% 115% at 78% 16%, #f6efe2 0%, #e4c9a4 32%, #c4703f 68%, #5c2f18 100%); }
-.work__art--3 { background:                    /* ACME Bistro — dark green */
-  radial-gradient(120% 120% at 30% 78%, #2f5347 0%, #1c332c 40%, #0e1a16 74%, #070d0b 100%); }
+/* Each thumbnail previews the palette of the site it links to. */
+.work__art--1 { background:                    /* Izvorul Alb — amber */
+  radial-gradient(120% 120% at 22% 12%, #fbe7b0 0%, #f0c04a 30%, #e7a70d 58%, #5a3e06 100%); }
+.work__art--2 { background:                    /* Critz Cross — cream and sage */
+  radial-gradient(115% 115% at 78% 16%, #f5f0e6 0%, #d9dcbf 32%, #869950 66%, #1f1c19 100%); }
 
 .work__ghost {
   position: relative;
@@ -577,7 +575,7 @@ a {
 }
 .work:hover .work__ghost { transform: scale(1.06); }
 
-/* Narrower cards in the three-up grid, so name and kind stack. */
+/* Name and kind stack inside each card. */
 .work__meta { margin: 1.6rem 1rem 0; }
 .work__meta h3 {
   font-family: var(--font-serif);

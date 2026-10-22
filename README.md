@@ -15,10 +15,6 @@ app/
   robots.ts           generated robots.txt
   sitemap.ts          generated sitemap.xml
   api/contact/        POST endpoint — validates, screens, sends via Resend
-  demos/
-    acme-cloud/       demo: SaaS product site
-    acme-supply/      demo: e-commerce storefront
-    acme-bistro/      demo: restaurant / local business
 components/           one component per section
 lib/
   content.ts          all studio copy as typed data
@@ -44,9 +40,8 @@ npm run typecheck
 ## Architecture
 
 **Content is separated from presentation.** Every headline, service, FAQ, and
-demo entry lives in `lib/content.ts` as typed data. The section components map
-over it. Editing the studio site is mostly editing that one file. (Each demo
-keeps its own copy inline, since the three have entirely different shapes.)
+project lives in `lib/content.ts` as typed data. The section components map
+over it. Editing the studio site is mostly editing that one file.
 
 **Almost everything is a server component.** Only five pieces ship JavaScript:
 
@@ -56,14 +51,12 @@ keeps its own copy inline, since the three have entirely different shapes.)
 | `ContactForm` | form state and validation |
 | `Reveal` | the IntersectionObserver that fades sections in |
 | `HeroParallax` | drifts the hero as you scroll |
-| `SmoothScroll` | eased in-page scrolling (also used by the demos) |
+| `SmoothScroll` | eased in-page scrolling |
 
 `Reveal` and `HeroParallax` deliberately target elements from outside rather
 than wrapping them. That keeps the dune SVG and every section server-rendered —
 the observer is the only thing in the bundle, and no wrapper elements disturb
 the grid layouts.
-
-The client bundle — studio site plus all three demos — is ~233 KB gzipped.
 
 ## Design
 
@@ -146,34 +139,20 @@ place to judge the site's motion. Turn it on under Ease of Access → Display �
 "Show animations in Windows", or via System Properties → Advanced → Performance
 → Settings → Visual Effects.
 
-## Demo builds
+## Work section
 
 The studio site has no invented clients, case studies, testimonials, or
-performance metrics. Instead, `/demos` holds three finished pages a visitor can
-actually click into — built for a fictional "ACME" company. The businesses are
-invented, but the copy is written as real product, shop, and restaurant writing;
-there is no lorem ipsum anywhere:
+performance metrics. The work section links straight out to live sites a
+visitor can click through:
 
-| Route | Register |
+| Site | What it is |
 | --- | --- |
-| `/demos/acme-cloud/` | Light B2B SaaS — cool indigo, feature grid, pricing table, UI mock |
-| `/demos/acme-supply/` | E-commerce — warm paper stock, oversized serif, product grid |
-| `/demos/acme-bistro/` | Restaurant — deep green and brass, menu, hours, booking |
+| [izvorulalb.org](https://izvorulalb.org) | Fundația Izvorul Alb — village charity foundation in Bicaz, Neamț |
+| [critzcross.your.incredible.website](https://critzcross.your.incredible.website) | Critz Cross — guesthouse in a restored Saxon house in Criț, Transylvania |
 
-Each demo carries its own CSS Module and shares nothing with the studio
-stylesheet, so the three look genuinely unlike each other and unlike the studio
-site. That is the point: they demonstrate range, not a single template recoloured.
-
-`DemoChrome` pins a bar to the top of every demo stating that the company is
-fictional, with a link back to the studio site. Because that bar owns the
-`top: 0` sticky slot, demo page headers are deliberately static — a second
-sticky element at the same offset slides underneath it. The demo pages are also
-`noindex` (see each page's `metadata.robots`) and are kept out of `sitemap.ts`,
-so invented brands never compete with the real site in search results.
-
-To add a demo: create `app/demos/<slug>/page.tsx` and `page.module.css`, then add
-an entry to `demos` in `lib/content.ts`. The work section picks it up
-automatically. Thumbnail palettes live in `globals.css` under `.work__art--N`.
+To add one: add an entry to `projects` in `lib/content.ts`. The work section
+picks it up automatically. Thumbnail palettes live in `globals.css` under
+`.work__art--N`, one per card in order.
 
 ## Sending mail
 
