@@ -1,4 +1,5 @@
 import Brand from "./Brand";
+import CookieSettings from "./CookieSettings";
 import { navLinks, site } from "@/lib/content";
 
 const footerLinks = [...navLinks, { href: "#faq", label: "FAQ" }];
@@ -27,6 +28,7 @@ export default function Footer() {
           <p>
             &copy; {year} {site.name}. All rights reserved.
           </p>
+          <CookieSettings />
           <p className="footer__made">Designed &amp; built in {site.city}, Germany</p>
         </div>
       </div>
