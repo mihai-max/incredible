@@ -150,7 +150,6 @@ visitor can click through:
 | Site | What it is |
 | --- | --- |
 | [izvorulalb.org](https://izvorulalb.org) | Fundația Izvorul Alb — village charity foundation in Bicaz, Neamț |
-| [critzcross.your.incredible.website](https://critzcross.your.incredible.website) | Critz Cross — guesthouse in a restored Saxon house in Criț, Transylvania |
 
 To add one: add an entry to `projects` in `lib/content.ts`. The work section
 picks it up automatically. Thumbnail palettes live in `globals.css` under

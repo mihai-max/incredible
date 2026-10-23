@@ -54,14 +54,6 @@ export const projects: Project[] = [
     summary:
       "A village foundation in Bicaz, Neamț: its projects, news, and a podcast of local voices, with online donations through Stripe.",
   },
-  {
-    url: "https://critzcross.your.incredible.website",
-    name: "Critz Cross",
-    initials: "CC",
-    kind: "Guesthouse",
-    summary:
-      "Four rooms in a restored 1900 Saxon house in Criț, Transylvania. Rooms, breakfast, and the herbal sauna.",
-  },
 ];
 
 export type Service = {

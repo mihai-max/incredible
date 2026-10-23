@@ -521,7 +521,7 @@ a {
    --------------------------------------------------------- */
 .work-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 330px), 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 330px), 1fr));
   gap: clamp(1.25rem, 3vw, 2rem);
 }
 
@@ -560,8 +560,6 @@ a {
 /* Each thumbnail previews the palette of the site it links to. */
 .work__art--1 { background:                    /* Izvorul Alb — amber */
   radial-gradient(120% 120% at 22% 12%, #fbe7b0 0%, #f0c04a 30%, #e7a70d 58%, #5a3e06 100%); }
-.work__art--2 { background:                    /* Critz Cross — cream and sage */
-  radial-gradient(115% 115% at 78% 16%, #f5f0e6 0%, #d9dcbf 32%, #869950 66%, #1f1c19 100%); }
 
 .work__ghost {
   position: relative;
